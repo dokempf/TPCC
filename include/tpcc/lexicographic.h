@@ -122,14 +122,14 @@ public:
    */
   Bint index(const value_type& e) const;
 
-  constexpr Lexicographic<n, k - 1, Bint, Sint, Tint> boundary() const
+  constexpr Lexicographic<n, k - 1, bnd, Bint, Sint, Tint> boundary() const
   {
-    return Lexicographic<n, k - 1, Bint, Sint, Tint>{ dimensions };
+    return Lexicographic<n, k - 1, bnd, Bint, Sint, Tint>{ dimensions };
   }
 };
 
-template <int n, int k, typename Bint, typename Sint, typename Tint>
-Element<n, k, Sint, Tint> Lexicographic<n, k, Bint, Sint, Tint>::operator[](Bint index) const
+template <int n, int k, boundaries bnd, typename Bint, typename Sint, typename Tint>
+Element<n, k, Sint, Tint> Lexicographic<n, k, bnd, Bint, Sint, Tint>::operator[](Bint index) const
 {
   unsigned int b = 0;
   while (b < block_sizes.size())
@@ -162,8 +162,8 @@ Element<n, k, Sint, Tint> Lexicographic<n, k, Bint, Sint, Tint>::operator[](Bint
   return Element<n, k, Sint, Tint>{ combination, coordinates };
 }
 
-template <int n, int k, typename Bint, typename Sint, typename Tint>
-Bint Lexicographic<n, k, Bint, Sint, Tint>::index(const value_type& e) const
+template <int n, int k, boundaries bnd, typename Bint, typename Sint, typename Tint>
+Bint Lexicographic<n, k, bnd, Bint, Sint, Tint>::index(const value_type& e) const
 {
   Bint ci = e.direction_index();
   Bint result = 0;
