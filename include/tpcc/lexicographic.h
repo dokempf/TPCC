@@ -122,9 +122,10 @@ public:
    */
   Bint index(const value_type& e) const;
 
+  template<boundaries bndT = bnd>
   constexpr Lexicographic<n, k - 1, bnd, Bint, Sint, Tint> boundary() const
   {
-    return Lexicographic<n, k - 1, bnd, Bint, Sint, Tint>{ dimensions };
+    return Lexicographic<n, k - 1, bndT, Bint, Sint, Tint>{ dimensions };
   }
 };
 
@@ -185,6 +186,8 @@ Bint Lexicographic<n, k, bnd, Bint, Sint, Tint>::index(const value_type& e) cons
     assert((cross_coord != 0 && cross_coord !=  size().operator[](fdim)) || bnd != none);
     if (cross_coord == dimensions[fdim] && bnd == periodic)
       cross_coord = 0;
+    else if (bnd == none)
+      --cross_coord;
 
     result += cross_coord * factor;
     factor *= fdim;
