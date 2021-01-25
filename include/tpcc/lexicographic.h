@@ -183,7 +183,7 @@ Bint Lexicographic<n, k, bnd, Bint, Sint, Tint>::index(const value_type& e) cons
     Tint fdim = 1 + dimensions[e.across_direction(i)];
 
     Bint cross_coord = e.across_coordinate(i);
-    assert((cross_coord != 0 && cross_coord !=  size().operator[](fdim)) || bnd != none);
+    assert((cross_coord != 0 && cross_coord !=  dimensions[fdim]) || bnd != none);
     if (cross_coord == dimensions[fdim] && bnd == periodic)
       cross_coord = 0;
     else if (bnd == none)
