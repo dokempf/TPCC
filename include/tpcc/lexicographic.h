@@ -117,6 +117,19 @@ public:
    */
   value_type operator[](Bint index) const;
 
+  Bint index_in_slice(const value_type& e) const
+  {
+    Bint result = 0, factor = 1;
+    for (Tint i = 0; i < k; ++i)
+    {
+      Sint fdim = dimensions[e.along_direction(i)];
+      result += e.along_coordinate(i) * factor;
+      factor *= fdim;
+    }
+    return result;
+  }
+
+
   /**
    * \brief Find index of a given element.
    */
