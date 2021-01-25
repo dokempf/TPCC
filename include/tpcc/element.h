@@ -58,7 +58,7 @@ public:
   }
 
   static constexpr unsigned int n_val = n;
-  static constexpr unsigned int k_val = nk;
+  static constexpr unsigned int k_val = k;
 
   /// The number of facets in the boundary of this object
   static constexpr Tint n_facets() { return 2 * k; }
