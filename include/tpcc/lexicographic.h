@@ -5,6 +5,8 @@
 
 namespace TPCC
 {
+
+enum boundaries {both, none, periodic};
 /**
  * \brief Lexicographic enumeration of the `k`-dimensional faces in a tensor product chain complex
  * of dimension `n`.
@@ -32,7 +34,9 @@ namespace TPCC
  * The fastes level of enumeration is inside each sheet, where again the first coordinates
  * run fastest.
  */
-template <int n, int k, typename Bint = unsigned int, typename Sint = unsigned short,
+template <int n, int k,
+          boundaries bnd = both,
+          typename Bint = unsigned int, typename Sint = unsigned short,
           typename Tint = unsigned char>
 class Lexicographic
 {
@@ -76,7 +80,15 @@ public:
       for (Tint j = 0; j < k; ++j)
         p *= dimensions[n - 1 - combination.in(j)];
       for (Tint j = 0; j < n - k; ++j)
-        p *= 1 + dimensions[n - 1 - combination.out(j)];
+        switch (bnd)
+        {
+          case both:
+            p *= dimensions[n - 1 - combination.out(j)] + 1; break;
+          case none:
+            p *= dimensions[n - 1 - combination.out(j)] - 1; break;
+          default: // perioridic
+            p *= dimensions[n - 1 - combination.out(j)]; break;
+        }
       block_sizes[i] = p;
     }
   }
@@ -168,7 +180,13 @@ Bint Lexicographic<n, k, Bint, Sint, Tint>::index(const value_type& e) const
   for (unsigned int i = 0; i < n - k; ++i)
   {
     Tint fdim = 1 + dimensions[e.across_direction(i)];
-    result += e.across_coordinate(i) * factor;
+
+    Bint cross_coord = e.across_coordinate(i);
+    assert((cross_coord != 0 && cross_coord !=  size().operator[](fdim)) || bnd != none);
+    if (cross_coord == size().operator[](fdim) && bnd == periodic)
+      cross_coord = 0;
+
+    result += cross_coord * factor;
     factor *= fdim;
   }
   return result;
