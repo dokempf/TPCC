@@ -136,7 +136,7 @@ public:
   Bint index(const value_type& e) const;
 
   template<boundaries bndT = bnd>
-  constexpr Lexicographic<n, k - 1, bnd, Bint, Sint, Tint> boundary() const
+  constexpr Lexicographic<n, k - 1, bndT, Bint, Sint, Tint> boundary() const
   {
     return Lexicographic<n, k - 1, bndT, Bint, Sint, Tint>{ dimensions };
   }
