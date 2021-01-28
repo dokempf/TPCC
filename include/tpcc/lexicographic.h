@@ -213,7 +213,7 @@ Bint Lexicographic<n, k, bnd, Bint, Sint, Tint>::index(const value_type& e) cons
     Bint cross_coord = e.across_coordinate(i);
     std::cout << "fdim " << e.across_direction(i) << " " << fdim << " " << e.across_coordinate(i) << std::endl;
 
-    assert((cross_coord != 0 && cross_coord != fdim+1) || bnd != none);
+    //assert((cross_coord != 0 && cross_coord != fdim+1) || bnd != none);
     if (cross_coord == fdim && bnd == periodic)
       cross_coord = 0;
     else if (bnd == none)
