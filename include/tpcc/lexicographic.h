@@ -49,7 +49,7 @@ class Lexicographic
    */
   std::array<Bint, binomial(n, k)> block_sizes;
 
-  td::array<Bint, binomial(n, k)> block_sizes_bnd;
+  std::array<Bint, binomial(n, k)> block_sizes_bnd;
 
 public:
   /// The tensor order of the chain complex
