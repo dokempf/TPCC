@@ -49,6 +49,8 @@ class Lexicographic
    */
   std::array<Bint, binomial(n, k)> block_sizes;
 
+  td::array<Bint, binomial(n, k)> block_sizes_bnd;
+
 public:
   /// The tensor order of the chain complex
   static constexpr Tint order() { return n; }
@@ -89,7 +91,15 @@ public:
           default: // perioridic
             p *= dimensions[n - 1 - combination.out(j)]; break;
         }
-      block_sizes[i] = p;
+      block_sizes_bnd[i] = p;
+    }
+    Bint p = 1;
+    auto combination = combinations[i];
+    for (Tint j = 0; j < k; ++j)
+      p *= dimensions[n - 1 - combination.in(j)];
+    for (Tint j = 0; j < n - k; ++j)
+      p *= dimensions[n - 1 - combination.out(j)] + 1;
+      block_sizes_bnd[i] = p;
     }
   }
 
@@ -182,7 +192,7 @@ Bint Lexicographic<n, k, bnd, Bint, Sint, Tint>::index(const value_type& e) cons
   Bint ci = e.direction_index();
   Bint result = 0;
   for (unsigned int i = 0; i < ci; ++i)
-    result += block_sizes[i];
+    result += block_sizes_bnd[i];
 
   Bint factor = 1;
   for (Tint i = 0; i < k; ++i)
@@ -199,7 +209,7 @@ Bint Lexicographic<n, k, bnd, Bint, Sint, Tint>::index(const value_type& e) cons
     else if (bnd == none)  fdim -= 2;
 
     Bint cross_coord = e.across_coordinate(i);
-//    assert((cross_coord != 0 && cross_coord != fdim-1) || bnd != none);
+    assert((cross_coord != 0 && cross_coord != fdim-1) || bnd != none);
     if (cross_coord == fdim-1 && bnd == periodic)
       cross_coord = 0;
     else if (bnd == none)
