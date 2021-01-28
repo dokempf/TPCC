@@ -112,7 +112,7 @@ public:
   {
     Bint sum = 0;
     for (unsigned int i = 0; i < block_sizes.size(); ++i)
-      sum += block_sizes[i];
+      sum += block_sizes_bnd[i];
     return sum;
   }
 
@@ -211,8 +211,8 @@ Bint Lexicographic<n, k, bnd, Bint, Sint, Tint>::index(const value_type& e) cons
     else if (bnd == none)  fdim -= 2;
 
     Bint cross_coord = e.across_coordinate(i);
-    //assert((cross_coord != 0 && cross_coord != fdim+1) || bnd != none);
-    if (cross_coord == fdim && bnd == periodic)
+    assert((cross_coord != 0 && cross_coord != fdim+2) || bnd != none);
+    if (cross_coord == fdim+1 && bnd == periodic)
       cross_coord = 0;
     else if (bnd == none)
       --cross_coord;
