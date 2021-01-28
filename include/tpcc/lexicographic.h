@@ -101,7 +101,7 @@ public:
         p *= dimensions[n - 1 - combination.in(j)];
       for (Tint j = 0; j < n - k; ++j)
         p *= dimensions[n - 1 - combination.out(j)] + 1;
-      block_sizes_bnd[i] = p;
+      block_sizes[i] = p;
     }
   }
 
