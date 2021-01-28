@@ -94,11 +94,13 @@ public:
       block_sizes_bnd[i] = p;
     }
     Bint p = 1;
-    auto combination = combinations[i];
-    for (Tint j = 0; j < k; ++j)
-      p *= dimensions[n - 1 - combination.in(j)];
-    for (Tint j = 0; j < n - k; ++j)
-      p *= dimensions[n - 1 - combination.out(j)] + 1;
+    for (Tint i = 0; i < binomial(n, k); ++i)
+    {
+      auto combination = combinations[i];
+      for (Tint j = 0; j < k; ++j)
+        p *= dimensions[n - 1 - combination.in(j)];
+      for (Tint j = 0; j < n - k; ++j)
+        p *= dimensions[n - 1 - combination.out(j)] + 1;
       block_sizes_bnd[i] = p;
     }
   }
