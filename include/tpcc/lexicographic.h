@@ -6,7 +6,12 @@
 namespace TPCC
 {
 
-enum boundaries {both, none, periodic};
+enum boundaries
+{
+  both,
+  none,
+  periodic
+};
 /**
  * \brief Lexicographic enumeration of the `k`-dimensional faces in a tensor product chain complex
  * of dimension `n`.
@@ -34,10 +39,8 @@ enum boundaries {both, none, periodic};
  * The fastes level of enumeration is inside each sheet, where again the first coordinates
  * run fastest.
  */
-template <int n, int k,
-          boundaries bnd = both,
-          typename Bint = unsigned int, typename Sint = unsigned short,
-          typename Tint = unsigned char>
+template <int n, int k, boundaries bnd = both, typename Bint = unsigned int,
+          typename Sint = unsigned short, typename Tint = unsigned char>
 class Lexicographic
 {
   /**
@@ -85,11 +88,14 @@ public:
         switch (bnd)
         {
           case both:
-            p *= dimensions[n - 1 - combination.out(j)] + 1; break;
+            p *= dimensions[n - 1 - combination.out(j)] + 1;
+            break;
           case none:
-            p *= dimensions[n - 1 - combination.out(j)] - 1; break;
+            p *= dimensions[n - 1 - combination.out(j)] - 1;
+            break;
           default: // perioridic
-            p *= dimensions[n - 1 - combination.out(j)]; break;
+            p *= dimensions[n - 1 - combination.out(j)];
+            break;
         }
       block_sizes_bnd[i] = p;
     }
@@ -141,13 +147,12 @@ public:
     return result;
   }
 
-
   /**
    * \brief Find index of a given element.
    */
   Bint index(const value_type& e) const;
 
-  template<boundaries bndT = bnd>
+  template <boundaries bndT = bnd>
   constexpr Lexicographic<n, k - 1, bndT, Bint, Sint, Tint> boundary() const
   {
     return Lexicographic<n, k - 1, bndT, Bint, Sint, Tint>{ dimensions };
@@ -207,12 +212,15 @@ Bint Lexicographic<n, k, bnd, Bint, Sint, Tint>::index(const value_type& e) cons
   {
     Tint fdim = 1 + dimensions[e.across_direction(i)];
 
-    if (bnd == periodic)  fdim -= 1;
-    else if (bnd == none)  fdim -= 2;
+    if (bnd == periodic)
+      fdim -= 1;
+    else if (bnd == none)
+      fdim -= 2;
 
     Bint cross_coord = e.across_coordinate(i);
-    //std::cout << "fdim " << e.across_direction(i) << " " << fdim << " " << e.across_coordinate(i) << std::endl;
-    assert((cross_coord != 0 && cross_coord != fdim+1) || bnd != none);
+    // std::cout << "fdim " << e.across_direction(i) << " " << fdim << " " << e.across_coordinate(i)
+    // << std::endl;
+    assert((cross_coord != 0 && cross_coord != fdim + 1) || bnd != none);
     if (cross_coord == fdim && bnd == periodic)
       cross_coord = 0;
     else if (bnd == none)
