@@ -1,16 +1,61 @@
-cmake_minimum_required(VERSION 3.5)
-enable_testing()
+cmake_minimum_required(VERSION 3.9)
 
 project(TPCC LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_DEBUG} -Wall -pedantic -Wextra -D_GLIBCXX_DEBUG")
+# Define an option to build documentation
+option(BUILD_DOC "Whether to build a Doxygen documentation" ON)
 
-include_directories(include)
+# Create a target that transports all the necessary information to downstream projects
+add_library(tpcc INTERFACE)
 
-add_subdirectory(tests)
-add_subdirectory(doc)
+# Add the correct include directories
+target_include_directories(
+  tpcc
+  INTERFACE
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 
-# add_executable(TensorEnumeration main.cpp)
+# Add the necessary C++ standard requirement
+target_compile_features(
+  tpcc
+  INTERFACE
+  cxx_std_17
+)
+
+# Add tests if requested through the BUILD_TESTING option (default: ON)
+include(CTest)
+if(BUILD_TESTING)
+  enable_testing()
+  add_subdirectory(tests)
+endif()
+
+# Build documentation if requested through the BUILD_DOC option (default: ON)
+if(BUILD_DOC)
+  add_subdirectory(doc)
+endif()
+
+# Add a namespaced alias target for the export
+add_library(HyperHDG::tpcc ALIAS tpcc)
+
+# Install targets, headers and configuration
+include(GNUInstallDirs)
+install(
+  TARGETS tpcc
+  EXPORT tpcc-config
+)
+
+install(
+  EXPORT tpcc-config
+  NAMESPACE HyperHDG::
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/tpcc
+)
+
+install(
+  DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+# Print a summary
+include(FeatureSummary)
+feature_summary(WHAT ALL)
