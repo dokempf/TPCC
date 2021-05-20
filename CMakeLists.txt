@@ -1,5 +1,12 @@
 cmake_minimum_required(VERSION 3.9)
 
+# Detect if we are running bundled into a larger project
+if(NOT DEFINED PROJECT_NAME)
+  set(SUBPROJECT OFF)
+else()
+  set(SUBPROJECT ON)
+endif()
+
 project(TPCC LANGUAGES CXX)
 
 # Define an option to build documentation
@@ -25,13 +32,13 @@ target_compile_features(
 
 # Add tests if requested through the BUILD_TESTING option (default: ON)
 include(CTest)
-if(BUILD_TESTING)
+if(BUILD_TESTING AND NOT SUBPROJECT)
   enable_testing()
   add_subdirectory(tests)
 endif()
 
 # Build documentation if requested through the BUILD_DOC option (default: ON)
-if(BUILD_DOC)
+if(BUILD_DOC AND NOT SUBPROJECT)
   add_subdirectory(doc)
 endif()
 
